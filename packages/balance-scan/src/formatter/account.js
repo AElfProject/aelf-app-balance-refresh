@@ -68,13 +68,18 @@ function requestFrefreshBalance(txs, feeSymbol = '') {
   }).then(() => {
     console.log('update cache done', feeSymbol || txs.symbol);
   }).catch(error => {
-    console.log('update cache error:', error);
+    console.log('update cache error:', error, 'api: ', config.refreshBalance.remoteApi);
   });
 }
 
 async function transferredInsert(transaction, type) {
   // console.log('transferredInsert: ', transaction, type);
   const formattedData = await transferredFormatter(transaction, type);
+  // console.log('formattedData: ', formattedData);
+
+  if (!formattedData.length) {
+    return;
+  }
 
   formattedData.forEach(txs => {
     requestFrefreshBalance(txs);
@@ -82,7 +87,6 @@ async function transferredInsert(transaction, type) {
       requestFrefreshBalance(txs, config.refreshBalance.feeToken);
     }
   });
-  // console.log('formattedData: ', formattedData);
   return true;
 }
 

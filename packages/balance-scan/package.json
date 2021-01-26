@@ -1,16 +1,16 @@
 {
-  "name": "proposal-scan",
+  "name": "balance-scan",
   "version": "0.1.0",
-  "description": "Scanner of proposal",
+  "description": "Scanner of balance",
   "author": "atom-young <atom.yang@aelf.io>",
   "homepage": "",
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "dev": "npm run clean && cross-env NODE_ENV=development pm2 start src/index.js --name aelf-proposal-scan --time",
+    "dev": "npm run clean && cross-env NODE_ENV=development pm2 start src/index.js --name aelf-balance-scan --time",
     "devD": "cross-env NODE_ENV=development node src/index.js",
-    "start": "cross-env NODE_ENV=production pm2 start src/index.js --name aelf-proposal-scan --exp-backoff-restart-delay=1000 --time",
-    "stop": "pm2 stop aelf-proposal-scan",
+    "start": "cross-env NODE_ENV=production pm2 start src/index.js --name aelf-balance-scan --exp-backoff-restart-delay=1000 --time",
+    "stop": "pm2 stop aelf-balance-scan",
     "clean": "rimraf ./*.log"
   },
   "dependencies": {
