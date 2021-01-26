@@ -87,7 +87,6 @@ async function transferredInsert(transaction, type) {
       requestFrefreshBalance(txs, config.refreshBalance.feeToken);
     }
   });
-  return true;
 }
 
 module.exports = {
