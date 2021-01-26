@@ -1,5 +1,6 @@
-# aelf-contract-viewer an aelf contract code viewer
+# aelf-app-balance-refresh
 
+For aelf wallet app.
 
 ![Yarn](https://img.shields.io/badge/yarn-workspace-brightgreen)
 
