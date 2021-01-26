@@ -31,5 +31,10 @@
   "decompiler": {
     "interval": 300000,
     "remoteApi": "http://192.168.197.35:5566/getfiles"
+  },
+  "refreshBalance": {
+    "remoteApi": "",
+    "currentChain": "tDVV",
+    "feeToken": "ELF"
   }
 }

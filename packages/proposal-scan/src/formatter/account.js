@@ -1,30 +1,14 @@
 /**
  * @file account formatter
  */
-const Decimal = require('decimal.js');
-const lodash = require('lodash');
-const {
-  Balance
-} = require('viewer-orm/model/balance');
-const {
-  Transfer
-} = require('viewer-orm/model/transfer');
-const {
-  Tokens
-} = require('viewer-orm/model/tokens');
-const {
-  sequelize
-} = require('viewer-orm/common/viewer');
-const {
-  QUERY_TYPE
-} = require('aelf-block-scan');
+
+const axios = require('axios');
+
 const {
   deserializeLogs
 } = require('../utils');
 const {
-  TOKEN_BALANCE_CHANGED_EVENT,
   TOKEN_TRANSFERRED_EVENT,
-  TOKEN_SUPPLY_CHANGED_EVENT
 } = require('../config/constants');
 const config = require('../config');
 
@@ -52,10 +36,6 @@ async function transferredFormatter(transaction) {
   let transferInfo = await deserializeTransferredLogs(transaction, TOKEN_TRANSFERRED_EVENT);
   transferInfo = transferInfo.reduce((acc, v) => [...acc, ...v], []);
   return Promise.all(transferInfo.map(async item => {
-    const {
-      amount,
-      symbol
-    } = item;
     return {
       ...item,
       amount: -1,
@@ -64,19 +44,46 @@ async function transferredFormatter(transaction) {
   }));
 }
 
-// function transferredInserter(formattedData) {
-//   return sequelize.transaction(t => Transfer.bulkCreate(formattedData, {
-//     transaction: t
-//   }));
-// }
+function requestFrefreshBalance(txs, feeSymbol = '') {
+  axios({
+    method: 'post',
+    url: config.refreshBalance.remoteApi, // 'https://wallet-app-api-test.aelf.io/app/elf/cache_balance',
+    data: {
+      device: 'iOS',
+      udid: '1',
+      version: '3.7',
+      test: '1',
+      from: JSON.stringify({
+        address: txs.from, // '2RCLmZQ2291xDwSbDEJR6nLhFJcMkyfrVTq1i1YxWC4SdY49a6',
+        chainid: config.refreshBalance.currentChain, // 'tDVV',
+        symbol: feeSymbol || txs.symbol, // 'LOT'
+      }),
+      to: JSON.stringify({
+        address: txs.to, // '2RCLmZQ2291xDwSbDEJR6nLhFJcMkyfrVTq1i1YxWC4SdY49a6',
+        chainid: config.refreshBalance.currentChain, // 'tDVV',
+        symbol: feeSymbol || txs.symbol, // 'LOT'
+      }),
+      chain_id: config.refreshBalance.currentChain // 'tDVV'
+    }
+  }).then(() => {
+    console.log('update cache done', feeSymbol || txs.symbol);
+  }).catch(error => {
+    console.log('update cache error:', error);
+  });
+}
 
 async function transferredInsert(transaction, type) {
-  console.log('transferredInsert: ', transaction, type);
+  // console.log('transferredInsert: ', transaction, type);
   const formattedData = await transferredFormatter(transaction, type);
 
-  console.log('formattedData: ', formattedData);
+  formattedData.forEach(txs => {
+    requestFrefreshBalance(txs);
+    if (txs.symbol !== config.refreshBalance.feeToken) {
+      requestFrefreshBalance(txs, config.refreshBalance.feeToken);
+    }
+  });
+  // console.log('formattedData: ', formattedData);
   return true;
-  // return transferredInserter(formattedData);
 }
 
 module.exports = {

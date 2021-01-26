@@ -13,22 +13,11 @@ const config = require('../config');
 const {
   asyncFilter
 } = require('../utils');
-const {
-  isProposalCreated,
-  proposalCreatedInsert,
-  proposalVotedReducer,
-  proposalVotedInsert,
-  proposalReleasedInsert
-} = require('../formatter/proposal');
+
 const {
   transferredInsert,
-  tokenSupplyChangedInsert
 } = require('../formatter/account');
-const {
-  organizationCreatedInsert,
-  organizationUpdatedInsert,
-  organizationMemberChangedInserter
-} = require('../formatter/organization');
+
 const {
   SCAN_TAGS
 } = require('../config/constants');

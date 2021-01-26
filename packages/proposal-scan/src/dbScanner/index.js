@@ -22,23 +22,13 @@ const {
 const {
   isTransactionMined
 } = require('../formatter/common');
-const {
-  isProposalClaimed,
-  proposalClaimedInsert
-} = require('../formatter/proposal');
 
 const defaultOptions = {
   pageSize: 50,
   concurrentQueryLimit: 5
 };
 
-const filterAndFormatProposal = [
-  {
-    desc: 'proposal claimed',
-    filter: isProposalClaimed,
-    insert: proposalClaimedInsert
-  }
-];
+// const filterAndFormatProposal = [];
 
 class DBScanner {
   constructor(options = defaultOptions) {
@@ -115,28 +105,28 @@ class DBScanner {
       return;
     }
     console.log(`transaction length ${filteredResult.length}`);
-    const proposalTransactions = await this.getTransactions(filteredResult);
+    // const proposalTransactions = await this.getTransactions(filteredResult);
     // eslint-disable-next-line no-restricted-syntax
-    for (const processor of filterAndFormatProposal) {
-      const {
-        filter,
-        reducer,
-        insert,
-        desc
-      } = processor;
-      console.log(`handle ${desc}`);
-      // eslint-disable-next-line no-await-in-loop
-      let filtered = await asyncFilter(proposalTransactions, filter);
-      if (reducer) {
-        // eslint-disable-next-line no-await-in-loop
-        filtered = await reducer(filtered);
-      }
-      // eslint-disable-next-line no-restricted-syntax
-      for (const item of filtered) {
-        // eslint-disable-next-line no-await-in-loop
-        await insert(item);
-      }
-    }
+    // for (const processor of filterAndFormatProposal) {
+    //   const {
+    //     filter,
+    //     reducer,
+    //     insert,
+    //     desc
+    //   } = processor;
+    //   console.log(`handle ${desc}`);
+    //   // eslint-disable-next-line no-await-in-loop
+    //   let filtered = await asyncFilter(proposalTransactions, filter);
+    //   if (reducer) {
+    //     // eslint-disable-next-line no-await-in-loop
+    //     filtered = await reducer(filtered);
+    //   }
+    //   // eslint-disable-next-line no-restricted-syntax
+    //   for (const item of filtered) {
+    //     // eslint-disable-next-line no-await-in-loop
+    //     await insert(item);
+    //   }
+    // }
     await ScanCursor.updateLastIncId(end, config.dbScannerName);
   }
 

@@ -11,7 +11,7 @@ const {
   Scanner
 } = require('aelf-block-scan');
 const config = require('./config');
-const DBScanner = require('./dbScanner');
+// const DBScanner = require('./dbScanner');
 const DBOperation = require('./dbOperation');
 const {
   listeners
@@ -44,10 +44,10 @@ async function init() {
   if (lastId === false) {
     await ScanCursor.insertIncId(0, config.scannerName);
   }
-  const lastDBId = await ScanCursor.getLastId(config.dbScannerName);
-  if (lastDBId === false) {
-    await ScanCursor.insertIncId(0, config.dbScannerName);
-  }
+  // const lastDBId = await ScanCursor.getLastId(config.dbScannerName);
+  // if (lastDBId === false) {
+  //   await ScanCursor.insertIncId(0, config.dbScannerName);
+  // }
   const aelf = new AElf(new AElf.providers.HttpProvider(config.scan.host));
   const scanner = new Scanner(new DBOperation({}), {
     ...config.scan,
@@ -58,15 +58,15 @@ async function init() {
     listeners,
     scanMode: 'listener'
   });
-  const dbScanner = new DBScanner({
-    aelf,
-    concurrentQueryLimit: config.scan.concurrentQueryLimit,
-    interval: config.scan.proposalInterval
-  });
+  // const dbScanner = new DBScanner({
+  //   aelf,
+  //   concurrentQueryLimit: config.scan.concurrentQueryLimit,
+  //   interval: config.scan.proposalInterval
+  // });
   try {
     await scanner.start();
     console.log('start loop');
-    await dbScanner.init();
+    // await dbScanner.init();
   } catch (err) {
     // Sentry.withScope(scope => {
     //   scope.addEventProcessor(event => event);
