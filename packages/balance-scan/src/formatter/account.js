@@ -65,8 +65,8 @@ function requestFrefreshBalance(txs, feeSymbol = '') {
       }),
       chain_id: config.refreshBalance.currentChain // 'tDVV'
     }
-  }).then(() => {
-    console.log('update cache done', feeSymbol || txs.symbol);
+  }).then(res => {
+    console.log('update cache done', feeSymbol || txs.symbol, res.data);
   }).catch(error => {
     console.log('update cache error:', error, 'api: ', config.refreshBalance.remoteApi);
   });
