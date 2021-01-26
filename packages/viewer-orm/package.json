@@ -1,0 +1,27 @@
+{
+  "name": "viewer-orm",
+  "version": "0.1.0",
+  "description": "ORM for viewer",
+  "author": "atom-young <atom.yang@aelf.io>",
+  "homepage": "",
+  "license": "MIT",
+  "main": "src/index.js",
+  "scripts": {
+    "create-db": "cross-env NODE_ENV=production sequelize db:create --charset=utf8mb4",
+    "create-db:dev": "cross-env NODE_ENV=development sequelize db:create --charset=utf8mb4",
+    "generate": "cross-env NODE_ENV=production sequelize migration:generate",
+    "generate:dev": "cross-env NODE_ENV=development sequelize migration:generate",
+    "migrate": "cross-env NODE_ENV=production sequelize db:migrate",
+    "migrate:dev": "cross-env NODE_ENV=development sequelize db:migrate",
+    "undo-all": "cross-env NODE_ENV=production sequelize db:migrate:undo:all",
+    "undo-all:dev": "cross-env NODE_ENV=development sequelize db:migrate:undo:all"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "lodash": "^4.17.15",
+    "mysql2": "^2.1.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^5.5.1"
+  }
+}
